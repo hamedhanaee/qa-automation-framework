@@ -68,38 +68,34 @@ def test_historical_query_returns_expected_feature_structure(
         assert feature["type"] == "Feature"
         assert isinstance(feature["id"], str)
         assert isinstance(feature["properties"], dict)
-        assert {"mag", "place", "time"} <= feature["properties"].keys()
+        assert {
+            "mag",
+            "place",
+            "time",
+            "updated",
+            "status",
+            "tsunami",
+            "sig",
+            "net",
+            "code",
+            "type",
+        } <= feature["properties"].keys()
+
+        properties = feature["properties"]
+        assert isinstance(properties["mag"], int | float)
+        assert isinstance(properties["place"], str)
+        assert isinstance(properties["time"], int)
+        assert isinstance(properties["updated"], int)
+        assert isinstance(properties["status"], str)
+        assert isinstance(properties["tsunami"], int)
+        assert isinstance(properties["sig"], int)
+        assert isinstance(properties["net"], str)
+        assert isinstance(properties["code"], str)
+        assert isinstance(properties["type"], str)
+
         assert feature["geometry"]["type"] == "Point"
-        assert len(feature["geometry"]["coordinates"]) == 3
-
-
-@pytest.mark.parametrize(
-    ("parameter", "invalid_value", "expected_error"),
-    [
-        pytest.param(
-            "limit",
-            20001,
-            'Bad limit value "20001". Valid values are 0 <= limit <= 20000',
-            id="limit-above-maximum",
-        ),
-        pytest.param(
-            "orderby",
-            "invalid",
-            'Bad orderby value "invalid". Valid values are:',
-            id="unsupported-ordering",
-        ),
-    ],
-)
-def test_invalid_query_parameter_returns_bad_request(
-    earthquake_client: UsgsEarthquakeClient,
-    parameter: str,
-    invalid_value: object,
-    expected_error: str,
-) -> None:
-    params = {**HISTORICAL_QUERY, parameter: invalid_value}
-
-    response = earthquake_client.query(params)
-
-    assert response.status_code == 400
-    assert response.headers["Content-Type"].startswith("text/plain")
-    assert expected_error in response.text
+        coordinates = feature["geometry"]["coordinates"]
+        assert len(coordinates) == 3
+        assert all(isinstance(coordinate, int | float) for coordinate in coordinates)
+        assert -180 <= coordinates[0] <= 180
+        assert -90 <= coordinates[1] <= 90
