@@ -1,10 +1,16 @@
 import os
 
-USGS_EARTHQUAKE_BASE_URL = os.getenv(
-    "USGS_EARTHQUAKE_BASE_URL",
-    "https://earthquake.usgs.gov/fdsnws/event/1",
-)
+DEFAULT_USGS_EARTHQUAKE_BASE_URL = "https://earthquake.usgs.gov/fdsnws/event/1"
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 15.0
+
+
+def get_usgs_earthquake_base_url() -> str:
+    base_url = os.getenv(
+        "USGS_EARTHQUAKE_BASE_URL", DEFAULT_USGS_EARTHQUAKE_BASE_URL
+    ).rstrip("/")
+    if not base_url:
+        raise ValueError("USGS_EARTHQUAKE_BASE_URL must not be empty")
+    return base_url
 
 
 def get_request_timeout() -> float:

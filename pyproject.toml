@@ -20,6 +20,7 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"
+log_level = "INFO"
 markers = [
     "regression: complete API behavior coverage",
     "smoke: fast checks for API availability and the core response contract",

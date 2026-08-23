@@ -18,6 +18,10 @@ The client uses the public USGS endpoint and a 15-second timeout by default. The
 can be overridden with `USGS_EARTHQUAKE_BASE_URL` and
 `API_REQUEST_TIMEOUT_SECONDS`.
 
+Pytest captures each request's method, URL, response status, and elapsed time and
+includes those details with test failures. Common sensitive query parameters are
+redacted, and request or response headers and bodies are not logged.
+
 ## Running Tests
 
 ```bash
