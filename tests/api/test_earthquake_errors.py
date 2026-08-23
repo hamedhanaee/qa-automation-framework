@@ -8,6 +8,8 @@ BASE_QUERY = {
     "endtime": "2014-01-02T00:00:00",
 }
 
+pytestmark = pytest.mark.regression
+
 
 @pytest.mark.parametrize(
     ("parameter", "invalid_value", "expected_error"),

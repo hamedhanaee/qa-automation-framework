@@ -2,6 +2,7 @@ from datetime import UTC, datetime
 
 import pytest
 import requests
+from jsonschema import validate
 
 from clients.usgs_earthquake_client import UsgsEarthquakeClient
 
@@ -14,6 +15,8 @@ HISTORICAL_QUERY = {
     "minmagnitude": 6,
 }
 
+pytestmark = pytest.mark.regression
+
 
 @pytest.fixture(scope="session")
 def historical_earthquake_response(
@@ -22,6 +25,7 @@ def historical_earthquake_response(
     return earthquake_client.query(HISTORICAL_QUERY)
 
 
+@pytest.mark.smoke
 def test_historical_query_returns_geojson_response(
     historical_earthquake_response: requests.Response,
 ) -> None:
@@ -59,43 +63,16 @@ def test_historical_query_returns_events_within_requested_range(
         assert start_timestamp_ms <= event_timestamp_ms <= end_timestamp_ms
 
 
-def test_historical_query_returns_expected_feature_structure(
+@pytest.mark.smoke
+def test_historical_query_matches_geojson_contract(
     historical_earthquake_response: requests.Response,
+    earthquake_feature_collection_schema: dict[str, object],
 ) -> None:
-    features = historical_earthquake_response.json()["features"]
+    body = historical_earthquake_response.json()
+    validate(instance=body, schema=earthquake_feature_collection_schema)
 
-    for feature in features:
-        assert feature["type"] == "Feature"
-        assert isinstance(feature["id"], str)
-        assert isinstance(feature["properties"], dict)
-        assert {
-            "mag",
-            "place",
-            "time",
-            "updated",
-            "status",
-            "tsunami",
-            "sig",
-            "net",
-            "code",
-            "type",
-        } <= feature["properties"].keys()
-
-        properties = feature["properties"]
-        assert isinstance(properties["mag"], int | float)
-        assert isinstance(properties["place"], str)
-        assert isinstance(properties["time"], int)
-        assert isinstance(properties["updated"], int)
-        assert isinstance(properties["status"], str)
-        assert isinstance(properties["tsunami"], int)
-        assert isinstance(properties["sig"], int)
-        assert isinstance(properties["net"], str)
-        assert isinstance(properties["code"], str)
-        assert isinstance(properties["type"], str)
-
-        assert feature["geometry"]["type"] == "Point"
+    for feature in body["features"]:
         coordinates = feature["geometry"]["coordinates"]
         assert len(coordinates) == 3
-        assert all(isinstance(coordinate, int | float) for coordinate in coordinates)
         assert -180 <= coordinates[0] <= 180
         assert -90 <= coordinates[1] <= 90

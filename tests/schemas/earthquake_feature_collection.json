@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["type", "metadata", "features"],
+  "properties": {
+    "type": {"const": "FeatureCollection"},
+    "metadata": {
+      "type": "object",
+      "required": ["generated", "url", "title", "status", "api", "count"],
+      "properties": {
+        "generated": {"type": "integer"},
+        "url": {"type": "string"},
+        "title": {"type": "string"},
+        "status": {"type": "integer"},
+        "api": {"type": "string"},
+        "count": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": true
+    },
+    "features": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/feature"}
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "feature": {
+      "type": "object",
+      "required": ["type", "properties", "geometry", "id"],
+      "properties": {
+        "type": {"const": "Feature"},
+        "id": {"type": "string"},
+        "properties": {
+          "type": "object",
+          "required": [
+            "mag",
+            "place",
+            "time",
+            "updated",
+            "status",
+            "tsunami",
+            "sig",
+            "net",
+            "code",
+            "type"
+          ],
+          "properties": {
+            "mag": {"type": ["number", "null"]},
+            "place": {"type": ["string", "null"]},
+            "time": {"type": "integer"},
+            "updated": {"type": "integer"},
+            "status": {"type": "string"},
+            "tsunami": {"type": "integer"},
+            "sig": {"type": "integer"},
+            "net": {"type": "string"},
+            "code": {"type": "string"},
+            "type": {"type": "string"}
+          },
+          "additionalProperties": true
+        },
+        "geometry": {
+          "type": "object",
+          "required": ["type", "coordinates"],
+          "properties": {
+            "type": {"const": "Point"},
+            "coordinates": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {"type": "number"}
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

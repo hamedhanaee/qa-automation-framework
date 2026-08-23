@@ -24,8 +24,28 @@ can be overridden with `USGS_EARTHQUAKE_BASE_URL` and
 pytest
 ```
 
+Run the fast API and response-contract checks, or the complete regression suite:
+
+```bash
+pytest -m smoke
+pytest -m regression
+```
+
+Run formatting and lint checks:
+
+```bash
+ruff format --check .
+ruff check .
+```
+
 To create a self-contained HTML report:
 
 ```bash
 pytest --html=reports/report.html --self-contained-html
 ```
+
+## CI
+
+GitHub Actions runs formatting, linting, and the complete test suite on pull
+requests, pushes to `main`, and manual dispatches. HTML and JUnit reports are
+uploaded from every test run, including failed runs.

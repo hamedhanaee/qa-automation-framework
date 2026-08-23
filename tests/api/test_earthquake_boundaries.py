@@ -8,6 +8,8 @@ BASE_QUERY = {
     "endtime": "2014-01-02T00:00:00",
 }
 
+pytestmark = pytest.mark.regression
+
 
 def test_documented_maximum_limit_is_accepted_for_small_result_set(
     earthquake_client: UsgsEarthquakeClient,

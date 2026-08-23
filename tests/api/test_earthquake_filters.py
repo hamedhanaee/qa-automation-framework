@@ -12,6 +12,8 @@ BASE_QUERY = {
     "endtime": END_TIME,
 }
 
+pytestmark = pytest.mark.regression
+
 
 @pytest.mark.parametrize(
     ("parameter", "value", "comparison"),
