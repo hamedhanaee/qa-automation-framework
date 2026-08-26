@@ -1,6 +1,7 @@
 import os
 
 DEFAULT_USGS_EARTHQUAKE_BASE_URL = "https://earthquake.usgs.gov/fdsnws/event/1"
+DEFAULT_WORLD_BANK_INDICATORS_BASE_URL = "https://api.worldbank.org/v2"
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 15.0
 
 
@@ -10,6 +11,15 @@ def get_usgs_earthquake_base_url() -> str:
     ).rstrip("/")
     if not base_url:
         raise ValueError("USGS_EARTHQUAKE_BASE_URL must not be empty")
+    return base_url
+
+
+def get_world_bank_indicators_base_url() -> str:
+    base_url = os.getenv(
+        "WORLD_BANK_INDICATORS_BASE_URL", DEFAULT_WORLD_BANK_INDICATORS_BASE_URL
+    ).rstrip("/")
+    if not base_url:
+        raise ValueError("WORLD_BANK_INDICATORS_BASE_URL must not be empty")
     return base_url
 
 

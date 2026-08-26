@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "prefixItems": [
+    {
+      "type": "object",
+      "required": ["page", "pages", "per_page", "total", "sourceid", "lastupdated"],
+      "properties": {
+        "page": {"type": "integer", "minimum": 1},
+        "pages": {"type": "integer", "minimum": 1},
+        "per_page": {"type": "integer", "minimum": 1},
+        "total": {"type": "integer", "minimum": 1},
+        "sourceid": {"type": "string"},
+        "lastupdated": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    {
+      "type": "array",
+      "items": {"$ref": "#/$defs/indicatorResult"}
+    }
+  ],
+  "items": false,
+  "minItems": 2,
+  "maxItems": 2,
+  "$defs": {
+    "indicatorResult": {
+      "type": "object",
+      "required": [
+        "indicator",
+        "country",
+        "countryiso3code",
+        "date",
+        "value",
+        "unit",
+        "obs_status",
+        "decimal"
+      ],
+      "properties": {
+        "indicator": {"$ref": "#/$defs/idValue"},
+        "country": {"$ref": "#/$defs/idValue"},
+        "countryiso3code": {"type": "string"},
+        "date": {"type": "string"},
+        "value": {"type": ["number", "null"]},
+        "unit": {"type": "string"},
+        "obs_status": {"type": "string"},
+        "decimal": {"type": "integer"}
+      },
+      "additionalProperties": true
+    },
+    "idValue": {
+      "type": "object",
+      "required": ["id", "value"],
+      "properties": {
+        "id": {"type": "string"},
+        "value": {"type": "string"}
+      },
+      "additionalProperties": true
+    }
+  }
+}

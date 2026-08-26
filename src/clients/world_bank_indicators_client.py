@@ -5,18 +5,18 @@ from typing import Any
 import requests
 
 from clients.request_diagnostics import log_request_failure, log_response
-from config import get_request_timeout, get_usgs_earthquake_base_url
+from config import get_request_timeout, get_world_bank_indicators_base_url
 
 LOGGER = logging.getLogger(__name__)
 
 
-class UsgsEarthquakeClient:
+class WorldBankIndicatorsClient:
     def __init__(
         self,
         base_url: str | None = None,
         timeout: float | None = None,
     ) -> None:
-        self.base_url = (base_url or get_usgs_earthquake_base_url()).rstrip("/")
+        self.base_url = (base_url or get_world_bank_indicators_base_url()).rstrip("/")
         self.timeout = timeout if timeout is not None else get_request_timeout()
         if self.timeout <= 0:
             raise ValueError("Request timeout must be greater than zero")
@@ -41,8 +41,17 @@ class UsgsEarthquakeClient:
         log_response(LOGGER, response)
         return response
 
-    def query(self, params: Mapping[str, Any]) -> requests.Response:
-        return self.get("query", params=params)
+    def get_indicator(
+        self,
+        country_codes: str,
+        indicator_code: str,
+        params: Mapping[str, Any] | None = None,
+    ) -> requests.Response:
+        query_params = {"format": "json", **(params or {})}
+        return self.get(
+            f"country/{country_codes}/indicator/{indicator_code}",
+            params=query_params,
+        )
 
     def close(self) -> None:
         self.session.close()

@@ -1,8 +1,8 @@
 # QA API Automation Framework
 
-Python and Pytest API tests against the public USGS Earthquake Catalog API. The
-current coverage validates a fixed historical query, its GeoJSON response contract,
-event timestamps, feature structure, and documented invalid parameters.
+Python and Pytest tests against the public USGS Earthquake Catalog and World Bank
+Indicators APIs. Coverage includes response contracts, deterministic historical
+queries, filtering, pagination, boundaries, and invalid input behavior.
 
 ## Setup
 
@@ -14,8 +14,8 @@ python -m pip install --upgrade pip
 python -m pip install -e .
 ```
 
-The client uses the public USGS endpoint and a 15-second timeout by default. These
-can be overridden with `USGS_EARTHQUAKE_BASE_URL` and
+The clients use the public API endpoints and a 15-second timeout by default. Override
+them with `USGS_EARTHQUAKE_BASE_URL`, `WORLD_BANK_INDICATORS_BASE_URL`, and
 `API_REQUEST_TIMEOUT_SECONDS`.
 
 Pytest captures each request's method, URL, response status, and elapsed time and
