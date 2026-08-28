@@ -8,5 +8,7 @@ __pycache__/
 .coverage
 htmlcov/
 reports/
+test-results*/
+playwright-report/
 *.pyc
 *.egg-info/

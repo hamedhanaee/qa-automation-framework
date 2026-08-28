@@ -1,4 +1,4 @@
-name: API tests
+name: Automated tests
 
 on:
   pull_request:
@@ -26,6 +26,9 @@ jobs:
       - name: Install project and test dependencies
         run: python -m pip install -e .
 
+      - name: Install Chromium
+        run: python -m playwright install --with-deps chromium
+
       - name: Verify formatting
         run: ruff format --check .
 
@@ -33,12 +36,17 @@ jobs:
         run: ruff check .
 
       - name: Run API tests
-        run: pytest -v --html=reports/report.html --self-contained-html --junitxml=reports/junit.xml
+        run: pytest tests/api tests/unit -v --html=reports/api.html --self-contained-html --junitxml=reports/api-junit.xml
+
+      - name: Run UI tests
+        run: pytest tests/ui -v --browser chromium --tracing retain-on-failure --screenshot only-on-failure --output test-results --html=reports/ui.html --self-contained-html --junitxml=reports/ui-junit.xml
 
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: api-test-reports
-          path: reports/
+          name: automated-test-artifacts
+          path: |
+            reports/
+            test-results/
           if-no-files-found: warn
