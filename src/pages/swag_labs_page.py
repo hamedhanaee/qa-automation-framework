@@ -27,14 +27,24 @@ class SwagLabsPage:
     def open_cart(self) -> None:
         self.page.get_by_test_id("shopping-cart-link").click()
 
-    def complete_checkout(
+    def remove_product_from_cart(self, product_name: str) -> None:
+        product = self.page.get_by_test_id("inventory-item").filter(
+            has_text=product_name
+        )
+        product.get_by_role("button", name="Remove").click()
+
+    def start_checkout(self) -> None:
+        self.page.get_by_role("button", name="Checkout").click()
+
+    def submit_checkout_information(
         self, first_name: str, last_name: str, postal_code: str
     ) -> None:
-        self.page.get_by_role("button", name="Checkout").click()
         self.page.get_by_placeholder("First Name").fill(first_name)
         self.page.get_by_placeholder("Last Name").fill(last_name)
         self.page.get_by_placeholder("Zip/Postal Code").fill(postal_code)
         self.page.get_by_role("button", name="Continue").click()
+
+    def finish_checkout(self) -> None:
         self.page.get_by_role("button", name="Finish").click()
 
     def sort_products(self, option: str) -> None:
