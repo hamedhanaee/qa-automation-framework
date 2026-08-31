@@ -141,6 +141,34 @@ def test_page_selects_requested_result_slice(
 
 
 @pytest.mark.parametrize(
+    ("page", "expected_result_count"),
+    [
+        pytest.param(3, 1, id="partial-final-page"),
+        pytest.param(4, 0, id="page-beyond-results"),
+    ],
+)
+def test_pagination_boundary_returns_expected_metadata_and_result_count(
+    world_bank_client: WorldBankIndicatorsClient,
+    page: int,
+    expected_result_count: int,
+) -> None:
+    response = world_bank_client.get_indicator(
+        COUNTRY_CODE,
+        INDICATOR_CODE,
+        {"date": "2010:2014", "page": page, "per_page": 2},
+    )
+
+    assert response.status_code == 200
+
+    metadata, results = response.json()
+    assert metadata["page"] == page
+    assert metadata["pages"] == 3
+    assert metadata["per_page"] == 2
+    assert metadata["total"] == 5
+    assert len(results) == expected_result_count
+
+
+@pytest.mark.parametrize(
     "per_page",
     [
         pytest.param(1, id="one-result"),
