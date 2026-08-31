@@ -5,16 +5,12 @@ from pages.swag_labs_page import SwagLabsPage
 
 pytestmark = [pytest.mark.ui, pytest.mark.regression]
 
-STANDARD_USER = "standard_user"
-STANDARD_PASSWORD = "secret_sauce"
-
 
 def test_adding_product_updates_cart_badge_and_cart_contents(
-    swag_labs: SwagLabsPage,
+    logged_in_swag_labs: SwagLabsPage,
 ) -> None:
+    swag_labs = logged_in_swag_labs
     product_name = "Sauce Labs Backpack"
-    swag_labs.open()
-    swag_labs.log_in(STANDARD_USER, STANDARD_PASSWORD)
     swag_labs.add_product_to_cart(product_name)
 
     expect(swag_labs.page.get_by_test_id("shopping-cart-badge")).to_have_text("1")
@@ -27,11 +23,10 @@ def test_adding_product_updates_cart_badge_and_cart_contents(
 
 
 def test_removing_one_of_multiple_products_updates_cart_state(
-    swag_labs: SwagLabsPage,
+    logged_in_swag_labs: SwagLabsPage,
 ) -> None:
+    swag_labs = logged_in_swag_labs
     product_names = ["Sauce Labs Backpack", "Sauce Labs Bike Light"]
-    swag_labs.open()
-    swag_labs.log_in(STANDARD_USER, STANDARD_PASSWORD)
     for product_name in product_names:
         swag_labs.add_product_to_cart(product_name)
 
@@ -74,14 +69,13 @@ def test_removing_one_of_multiple_products_updates_cart_state(
     ],
 )
 def test_checkout_requires_customer_information(
-    swag_labs: SwagLabsPage,
+    logged_in_swag_labs: SwagLabsPage,
     first_name: str,
     last_name: str,
     postal_code: str,
     expected_message: str,
 ) -> None:
-    swag_labs.open()
-    swag_labs.log_in(STANDARD_USER, STANDARD_PASSWORD)
+    swag_labs = logged_in_swag_labs
     swag_labs.add_product_to_cart("Sauce Labs Backpack")
     swag_labs.open_cart()
     swag_labs.start_checkout()
@@ -93,11 +87,10 @@ def test_checkout_requires_customer_information(
 
 
 def test_user_can_complete_checkout_and_see_order_confirmation(
-    swag_labs: SwagLabsPage,
+    logged_in_swag_labs: SwagLabsPage,
 ) -> None:
+    swag_labs = logged_in_swag_labs
     product_name = "Sauce Labs Backpack"
-    swag_labs.open()
-    swag_labs.log_in(STANDARD_USER, STANDARD_PASSWORD)
     swag_labs.add_product_to_cart(product_name)
     swag_labs.open_cart()
     swag_labs.start_checkout()
