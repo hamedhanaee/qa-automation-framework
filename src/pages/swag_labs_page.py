@@ -50,6 +50,9 @@ class SwagLabsPage:
     def sort_products(self, option: str) -> None:
         self.page.get_by_test_id("product-sort-container").select_option(option)
 
+    def product_names(self) -> list[str]:
+        return self.page.get_by_test_id("inventory-item-name").all_text_contents()
+
     def product_prices(self) -> list[float]:
         return [
             float(price.removeprefix("$"))

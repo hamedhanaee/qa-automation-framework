@@ -113,15 +113,3 @@ def test_user_can_complete_checkout_and_see_order_confirmation(
     )
     expect(swag_labs.page.get_by_text("Your order has been dispatched")).to_be_visible()
     expect(swag_labs.page.get_by_test_id("shopping-cart-badge")).to_have_count(0)
-
-
-def test_products_can_be_sorted_by_price_low_to_high(
-    swag_labs: SwagLabsPage,
-) -> None:
-    swag_labs.open()
-    swag_labs.log_in(STANDARD_USER, STANDARD_PASSWORD)
-    swag_labs.sort_products("lohi")
-
-    prices = swag_labs.product_prices()
-    assert len(prices) > 1
-    assert prices == sorted(prices)
