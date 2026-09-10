@@ -21,9 +21,10 @@ dependencies = [
 where = ["src"]
 
 [tool.pytest.ini_options]
-addopts = "-ra --strict-config --strict-markers"
+addopts = '-ra --strict-config --strict-markers -m "not performance"'
 log_level = "INFO"
 markers = [
+    "performance: opt-in sequential response-time comparisons",
     "regression: complete API and UI behavior coverage",
     "smoke: fast checks for service availability and core user workflows",
     "ui: browser-based user interface tests",

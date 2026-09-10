@@ -10,5 +10,6 @@ htmlcov/
 reports/
 test-results*/
 playwright-report/
+performance-results/
 *.pyc
 *.egg-info/
