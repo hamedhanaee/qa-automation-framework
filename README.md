@@ -1,5 +1,7 @@
 # QA Automation Framework
 
+[![Automated tests](https://github.com/hamedhanaee/qa-automation-framework/actions/workflows/api-tests.yml/badge.svg)](https://github.com/hamedhanaee/qa-automation-framework/actions/workflows/api-tests.yml)
+
 Python and Pytest tests against the public USGS Earthquake Catalog and World Bank
 Indicators APIs. Coverage includes response contracts, deterministic historical
 queries, filtering, pagination, boundaries, and invalid input behavior.
