@@ -69,11 +69,28 @@ jobs:
         run: pytest tests/ui -v --browser chromium --tracing retain-on-failure --screenshot only-on-failure --output test-results --html=reports/ui.html --self-contained-html --junitxml=reports/ui-junit.xml
 
       - name: Upload test reports
+        id: upload-test-reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: automated-test-artifacts-${{ env.SELECTED_SCOPE }}
+          name: test-reports-${{ env.SELECTED_SCOPE }}-${{ github.run_number }}
           path: |
             reports/
             test-results/
           if-no-files-found: warn
+          retention-days: 14
+
+      - name: Add test reports to run summary
+        if: always()
+        env:
+          REPORT_ARTIFACT_URL: ${{ steps.upload-test-reports.outputs.artifact-url }}
+        run: |
+          echo "## Test reports" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Selected scope: **${SELECTED_SCOPE}**" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$REPORT_ARTIFACT_URL" ]; then
+            echo "[Download HTML, JUnit, and browser failure artifacts]($REPORT_ARTIFACT_URL)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No test report files were available to upload." >> "$GITHUB_STEP_SUMMARY"
+          fi
