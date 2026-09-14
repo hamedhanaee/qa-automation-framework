@@ -12,9 +12,10 @@ def test_inventory_displays_products_with_names_and_valid_prices(
     swag_labs = logged_in_swag_labs
 
     inventory_items = swag_labs.page.get_by_test_id("inventory-item")
-    item_count = inventory_items.count()
 
     expect(swag_labs.page.get_by_test_id("inventory-list")).to_be_visible()
+    expect(inventory_items).to_have_count(6)
+    item_count = inventory_items.count()
     assert item_count > 0
     expect(inventory_items.get_by_test_id("inventory-item-name")).to_have_count(
         item_count

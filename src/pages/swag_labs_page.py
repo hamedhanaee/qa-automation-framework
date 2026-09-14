@@ -16,7 +16,9 @@ class SwagLabsPage:
 
     def log_out(self) -> None:
         self.page.get_by_role("button", name="Open Menu").click()
-        self.page.get_by_role("link", name="Logout").click()
+        logout_link = self.page.get_by_test_id("logout-sidebar-link")
+        logout_link.wait_for(state="visible")
+        logout_link.click()
 
     def add_product_to_cart(self, product_name: str) -> None:
         product = self.page.get_by_test_id("inventory-item").filter(
